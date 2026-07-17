@@ -1,7 +1,8 @@
 // Thin wrapper around the backend call. Kept separate from components so the
 // "what does calling the model actually look like" logic is in one place.
 export async function generateRecipe(ingredients, signal) {
-  const res = await fetch("/api/generate-recipe", {
+  const API_BASE = import.meta.env.VITE_API_URL || "";
+const res = await fetch(`${API_BASE}/api/generate-recipe`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ingredients }),
