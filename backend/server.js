@@ -8,6 +8,7 @@ app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
 const { BASE_URL, MODEL, API_KEY, PORT = 8787 } = process.env;
+console.log("DEBUG ENV:", { BASE_URL, MODEL, hasKey: !!API_KEY, keyPrefix: API_KEY?.slice(0,8), PORT });
 
 const SYSTEM_PROMPT = `You are a recipe generator. Given a free-form list of ingredients (and optionally dietary notes) from the user, invent ONE realistic recipe that mostly uses those ingredients (a few common pantry staples like salt, oil, water are fine to add).
 
@@ -51,6 +52,7 @@ function extractJson(raw) {
 }
 
 async function callModel(messages, signal) {
+  console.log("callModel: about to fetch, time =", new Date().toISOString());
   const res = await fetch(`${BASE_URL}/chat/completions`, {
     method: "POST",
     signal,
@@ -68,7 +70,7 @@ async function callModel(messages, signal) {
       response_format: { type: "json_object" },
     }),
   });
-
+  console.log("callModel: fetch resolved, time =", new Date().toISOString());
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     const err = new Error(`Model API error ${res.status}: ${body.slice(0, 300)}`);
@@ -92,7 +94,7 @@ app.post("/api/generate-recipe", async (req, res) => {
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 25_000);
-  req.on("close", () => controller.abort());
+  //req.on("close", () => controller.abort());
 
   const messages = [
     { role: "system", content: SYSTEM_PROMPT },
