@@ -1,3 +1,8 @@
+## Live Demo
+
+- **Live app:** https://fridge-to-recipe-nine.vercel.app
+- **Backend API:** https://fridge-to-recipe-xlm5.onrender.com
+
 # Fridge → Recipe
 
 Type in whatever's in your fridge/pantry, get back a real recipe: checkable
