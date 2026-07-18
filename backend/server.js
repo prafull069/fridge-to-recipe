@@ -112,6 +112,7 @@ app.post("/api/generate-recipe", async (req, res) => {
           return res.status(504).json({ error: "TIMEOUT", message: "The model took too long to respond. Please try again." });
         }
         lastError = err.message;
+        console.error(`[callModel attempt ${attempt}] failed:`, err.message);
         // Network/API error: retry once more unless we're out of attempts.
         if (attempt === MAX_ATTEMPTS) {
           return res.status(502).json({ error: "MODEL_UNAVAILABLE", message: "Couldn't reach the model. Please try again." });
